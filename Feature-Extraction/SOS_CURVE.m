@@ -94,33 +94,24 @@ for i_frame = 1:N_frame
             if f.p1<=0
                 cavg_tmp = NaN;
             else
-                cavg_tmp = sqrt(f.p1)/1e2; % [MM/US]
+                cavg_tmp = 1e3/sqrt(f.p1); % [MM/US]
             end
             CAVG(idx_z,idx_r,i_frame) = cavg_tmp;
         end
         CAVG(:,idx_r,i_frame) = fillmissing(CAVG(:,idx_r,i_frame),'movmedian',[5,5]);
         CAVG(:,idx_r,i_frame) = filloutliers(medfilt1(CAVG(:,idx_r,i_frame),5),"clip","movmedian",11);
-        %     figure
-        %     plot(1:length(zgrid_range),CAVG(:,idx_r))
-        %     hold on
-        %     plot(1:length(zgrid_range),test)
-        %     hold off
         perc = (idx_r + (i_frame-1)*info.Nsc)/(info.Nsc*N_frame);
         msg = sprintf('CALCULATING AVERAGE SOS %d / %d SCANLINES',idx_r + (i_frame-1)*info.Nsc,info.Nsc*N_frame);
         waitbar(perc,fwb,msg);
     end
 end
 close(fwb)
-%CAVG = medfilt2(CAVG,[5,3]); %CAVG(CAVG<=0.1) = 1.5;
-%CAVG = imbilatfilt(CAVG,0.1,2);
-%cavg_tmp = median(CAVG(:));
-%CAVG = CAVG/cavg_tmp*1.5;
+
 disp('>>>>>>>> ESTIMATION OF AVERAGE SOS COMPLETE.')
 %imagesc((CAVG),[1.3,1.7]); colorbar
 
 test = medfilt2(median(CAVG,3));
 test = fillmissing(fillmissing(test,'movmedian',[7,7]),'makima',2);
-%test(test<0.25) = 0.25;     test(test>25) = 25;
 CAVG = test;
 CAVG(isnan(CAVG)) = 0;
 CAVG(isinf(CAVG)) = 0;
