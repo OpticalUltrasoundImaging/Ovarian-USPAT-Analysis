@@ -81,6 +81,5 @@ RF_env_slsc_norm = RF_env_slsc./max(max(RF_env_slsc));
 idx = find(RF_env_slsc_norm < min_dB);
 RF_slsc_log = (20/dB_US)*log10(RF_env_slsc_norm)+1;
 RF_slsc_log(idx) = 0;
-%RF_slsc_log = imsharpen(RF_slsc_log);
 clearvars idx
 end
