@@ -117,63 +117,42 @@ CAVG(isnan(CAVG)) = 0;
 CAVG(isinf(CAVG)) = 0;
 %imagesc(test/1e4,[0,2])
 %%
-%fwb = waitbar(0,'CALCULATING LOCAL SOS ...');
+fwb = waitbar(0,'CALCULATING LOCAL SOS ...');
 Ntap = 11; fcutoff = 0.1;
 lof = sin(2*pi*fcutoff*(-floor(Ntap/2):floor(Ntap/2))).*hamming(Ntap); lof = lof/sum(lof); % 11-TAP LOWPASS FILTER BASED ON HAMMING WINDOW WITH 0.2 FREQUENCY CUTOFF
-% lambdaG = 2e-3;
-% lambdaR = 0.2e-3;
+lambdaR = 0.2e-3;
 N = size(CAVG,1);
 A = tril(ones(N));
 norm_factor = 1./(1:N); norm_factor = norm_factor';
 A = A.*repmat(norm_factor, [1 N]);
-c_init = 0.75; % INITIAL GUESS OF SOS
-% N_iter = 1e4;
+c_init = 1.5; % INITIAL GUESS OF SOS
+N_iter = 1e4;
 CLOC = c_init*ones(size(CAVG));
-% %loss_hist = zeros(N_iter,1);
-% fprintf('Progress:\n');
-% fprintf(['\n' repmat('.',1,info.Nsc) '\n\n']);
-% mst_drop = 0.2;
-% d1 = designfilt("lowpassfir", ...
-%     PassbandFrequency=0.005,StopbandFrequency=0.20, ...
-%     PassbandRipple=1,StopbandAttenuation=60, ...
-%     DesignMethod="equiripple");
-% parfor sc = 1:info.Nsc % SOLVE FOR LOCAL SOS BY SCANLINE
-%     cavg_tmp = filtfilt(d1,CAVG(:,sc));
-% 
-%     c_init = mean(cavg_tmp);
-%     cloc_tmp = c_init*ones(N,1);
-% %     cavg_tmp = ones(462,1); cavg_tmp(225:462,:) = 1+0.005*(1:238); cloc_tmp = 1.5*ones(462,1);
-% %     lambdaG = 1e-4;
-% %     lambdaR = 2e-5;
-% %     N_iter = 4e4;
-%     lambdaG_iter = lambdaG; lambdaR_iter = lambdaR;
-%     for idx_iter = 1:N_iter
-%         %loss_hist(idx_iter) = (conv(cloc_tmp,lof,'same') - cloc_tmp)'*(conv(cloc_tmp,lof,'same') - cloc_tmp);
-%         G_iter = 2*A'*(A*cloc_tmp - cavg_tmp); % MODEL FIDELITY LOSS
-%         R_iter = (conv(cloc_tmp,lof,'same') - cloc_tmp); % REGULARIZATION LOSS
-%         if idx_iter == 30001 || idx_iter == 37501 || idx_iter == 50001
-%             lambdaG_iter = mst_drop*lambdaG_iter; lambdaR_iter = 2.5*mst_drop*lambdaR_iter;
-%         end
-%         cloc_tmp = cloc_tmp - lambdaG*G_iter + lambdaR*R_iter;
-%         cloc_tmp(cloc_tmp<0) = 0;
-%     end
-% %     figure
-% %     plot(1:length(zgrid_range),cavg_tmp,'linewidth',2)
-% %     hold on
-% %     plot(1:length(zgrid_range),cloc_tmp,'linewidth',2)
-% %     hold off
-%     %figure; plot(1:N_iter,loss_hist)
-%     %figure; plot(1:length(zgrid_range),cavg_tmp); hold on; plot(1:length(zgrid_range),cloc_tmp); hold off; legend('c avg','c loc')
-%     CLOC(:,sc) = cloc_tmp;
-%     %perc = sc/info.Nsc;
-%     %msg = sprintf('CALCULATING LOCAL SOS %d / %d SCANLINES',sc,info.Nsc);
-%     %waitbar(perc,fwb,msg);
-%     fprintf('\b|\n');
-% end
-% disp('>>>>>>>> CALCULATION OF LOCAL SOS COMPLETE.')
-%close(fwb)
-% figure
-% subplot(121); imagesc(CAVG,[1.3,1.7]); colorbar
-% subplot(122); imagesc(CLOC,[1.3,1.7]); colorbar
-
+%loss_hist = zeros(N_iter,1);
+fprintf('Progress:\n');
+fprintf(['\n' repmat('.',1,info.Nsc) '\n\n']);
+mst_drop = 0.2;
+d1 = designfilt("lowpassfir", ...
+    PassbandFrequency=0.005,StopbandFrequency=0.20, ...
+    PassbandRipple=1,StopbandAttenuation=60, ...
+    DesignMethod="equiripple");
+parfor sc = 1:info.Nsc % SOLVE FOR LOCAL SOS BY SCANLINE
+    cavg_tmp = filtfilt(d1,CAVG(:,sc));
+    c_init = mean(cavg_tmp);
+    cloc_tmp = c_init*ones(N,1);
+    lambdaG_iter = lambdaG; lambdaR_iter = lambdaR;
+    for idx_iter = 1:N_iter
+        %loss_hist(idx_iter) = (conv(cloc_tmp,lof,'same') - cloc_tmp)'*(conv(cloc_tmp,lof,'same') - cloc_tmp);
+        G_iter = 2*A'*(A*cloc_tmp - cavg_tmp); % MODEL FIDELITY LOSS
+        R_iter = (conv(cloc_tmp,lof,'same') - cloc_tmp); % REGULARIZATION LOSS
+        if idx_iter == 30001 || idx_iter == 37501 || idx_iter == 50001
+            lambdaG_iter = mst_drop*lambdaG_iter; lambdaR_iter = 2.5*mst_drop*lambdaR_iter;
+        end
+        cloc_tmp = cloc_tmp - lambdaG*G_iter + lambdaR*R_iter;
+        cloc_tmp(cloc_tmp<0) = 0;
+    end
+    CLOC(:,sc) = cloc_tmp;
+    fprintf('\b|\n');
+end
+disp('>>>>>>>> CALCULATION OF LOCAL SOS COMPLETE.')
 end
