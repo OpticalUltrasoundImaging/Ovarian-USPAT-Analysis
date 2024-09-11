@@ -51,19 +51,6 @@ for i_frame = 1:N_frame
 
                 index1 = find(roi_tmp_fft >= 0.4, 1, 'first');  index2 = find(roi_tmp_fft >= 0.4, 1, 'last');
                 fwhm = (index2-index1 + 1)*20/512;
-                %plot(lag_test,r_test)
-                %fft_bw = roi_tmp_fft(floor(0.5*fc_scaled_tmp):ceil(0.75*fc_scaled_tmp));
-                %fft_bw = 5 - fft_bw/(max(fft_bw)+1e-8);
-
-%                 x = lsqnonneg(A,sqrt(fft_bw));
-%                 fc = x(2)/x(1)/2;
-%                 fc_var = 1/x(1);
-                %                 figure
-                %                 plot(f_list,b)
-                %                 hold on
-                %                 plot(f_list,x(1)*f_list.^2+x(2)*f_list+x(3))
-                %                 hold off
-                %fc = sum((linspace(0.425*fc_test,1.675*fc_test,round(1.25*fc_scaled_tmp)+1)'.*fft_bw))/sum(fft_bw);
                 fc_aline(i_z) = fc;
                 fcvar_aline(i_z) = fwhm;
             end
@@ -81,12 +68,9 @@ fc_map = median(abs(fc_map),3);
 %imagesc(fc_map,[0,10])
 %figure; subplot(121); imagesc(fc_map); subplot(122); imagesc(fc_map_var)
 
-%%
 fc_map_smooth = medfilt2(fillmissing(fc_map,'makima'));
 fc_map_smooth(fc_map_smooth<0)=0;
 fc_map_smooth = conv2(fc_map_smooth,lof,'same');
-%fc_map_smooth = medfilt2(fc_map./sqrt(fc_map_var));
-%figure; imagesc(fc_map_smooth)
 
 TAI = zeros(size(fc_map_smooth,1),size(fc_map_smooth,2),7);
 fwb = waitbar(0,'CALCULATING ATTENUATION COEFF...');
@@ -121,19 +105,4 @@ tai_avg = 1.5*tai_avg;
 tai_avg(tai_avg<0.025) = 0.025;
 %imagesc(tai_avg)
 
-% tai_avg = tai_avg
-% figure; subplot(121); imagesc(tai_avg); subplot(122); imagesc(tai_std)
-% TAI = -1*TAI; TAI(TAI<-1) = -1; TAI = TAI+1;
-% TAI = TAI*2.217/12.5;
-%figure;imagesc(TAI)
-
-% dz_filter = designfilt('differentiatorfir','FilterOrder',34, ...
-%     'PassbandFrequency',0.25,'StopbandFrequency',2.5, ...
-%     'SampleRate',20);
-% dz_filter = dz_filter.Coefficients;
-% plot(1:35,dz_filter)
-% TAI = -1*(conv2(fc_map_smooth,dz_filter', 'same')/(info.pixel_d*1e2)/12.5);
-% TAI(TAI<0) = 0;
-% TAI = 2.217*imbilatfilt(ordfilt2(TAI,120,ones(125,1)),0.1*max(TAI(:))^2,2);
-%figure; imagesc(TAI,[0,1])
 end
