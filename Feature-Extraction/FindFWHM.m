@@ -1,5 +1,5 @@
 function [weighted_mean, fwhm] = FindFWHM(x)
-%x = rand(100);
+
 x(isinf(x)) = 0;
 xmax = max(x(:));  xmin = min(x(:));
 xnorm = (x-xmin)/(xmax-xmin);   % NORMALIZE TO (0,1)
@@ -23,7 +23,6 @@ if isempty(fwhmidx2)
 end
 fwhm = (fwhmidx2 - fwhmidx1 + 1)*dedges*(xmax-xmin) + xmin;
 xseg = (fwhmidx1:fwhmidx2)*dedges*(xmax-xmin) + xmin;
-%xvalue_mask = ((binidx>=fwhmidx1 + binidx<=fwhmidx2)>0.9);
 weighted_mean = xseg*hist(fwhmidx1:fwhmidx2)/sum(hist(fwhmidx1:fwhmidx2));
 
 end
