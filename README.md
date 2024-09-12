@@ -10,7 +10,7 @@ Ovarian-adnexal lesions are conventionally assessed with ultrasound (US) under t
 # Usage
 processOnePatientMPUS.m: <br />            &nbsp;&nbsp;&nbsp;&nbsp; function takes patient identifier as input, and computes the <ins>US</ins> imaging features from the raw data stored in the patient data folder. <br />
 processOnePatientMPPA.m:  <br />           &nbsp;&nbsp;&nbsp;&nbsp; function takes patient identifier as input, and computes the <ins>PAT</ins> imaging features from the raw data stored in the patient data folder. <br />
-PAT_clinical_data_cropROI.m: script <br /> &nbsp;&nbsp;&nbsp;&nbsp; allows manual cropping of the lesion on a co-registered US-PAT B scan and stores the imaging features computed inside the ROI in a struct datatype. <br />
+PAT_clinical_data_cropROI.m: script <br /> &nbsp;&nbsp;&nbsp;&nbsp; allows manual cropping of the lesion on a co-registered US-PAT B scan and stores the imaging features computed inside the ROI in a struct. <br />
 PAT_clinical_data_classification.m: <br /> &nbsp;&nbsp;&nbsp;&nbsp; script contains code for constructing models for classifying lesion types based on the computed imaging features. <br />
 Feature-Extraction:  <br />                &nbsp;&nbsp;&nbsp;&nbsp; folder containing helper functions needed to compute imaging features.
 
