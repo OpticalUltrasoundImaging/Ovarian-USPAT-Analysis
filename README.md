@@ -1,4 +1,8 @@
 # Ovarian-USPAT-Analysis
+Algorithms for extracting quantitative imaging features from co-registered US-PAT images.  
+Machine learning models for classifying ovarian lesions based on quantitative imaging features.  
+by Yixiao Lin (https://opticalultrasoundimaging.wustl.edu/)
+
 <figure>
   <img src="https://github.com/OpticalUltrasoundImaging/Ovarian-USPAT-Analysis/blob/main/System-schematic.png" alt="Imaging system">
   <figcaption>Fig 1. Co-registered US-PAT imaging system schematic</figcaption>
