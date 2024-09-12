@@ -7,8 +7,8 @@ by Yixiao Lin (https://opticalultrasoundimaging.wustl.edu/)
   <img src="https://github.com/OpticalUltrasoundImaging/Ovarian-USPAT-Analysis/blob/main/System-schematic.png" alt="Imaging system">
   <figcaption>Fig 1. Co-registered US-PAT imaging system schematic</figcaption>
 </figure>  
-&nbsp;  
-&nbsp;  
+\  
+\  
 <figure>
   <img src="https://github.com/OpticalUltrasoundImaging/Ovarian-USPAT-Analysis/blob/main/Analysis-Pipeline.png" alt="Analysis pipeline">
   <figcaption>Fig 2. Procedure for lesion characterization and classification from a co-registered US-PAT scan.</figcaption>
