@@ -1,6 +1,6 @@
 # Ovarian-USPAT-Analysis
 <figure>
-  <img src="https://github.com/OpticalUltrasoundImaging/Ovarian-USPAT-Analysis/blob/main/System-schematic.PNG" alt="Imaging system">
+  <img src="https://github.com/OpticalUltrasoundImaging/Ovarian-USPAT-Analysis/blob/main/System-schematic.png" alt="Imaging system">
   <figcaption>Fig 1. Co-registered US-PAT imaging system schematic</figcaption>
 </figure>
 
